@@ -12,12 +12,7 @@ ray.init()
 #configures training of the agent with associated hyperparameters
 #See Ray documentation for details on each parameter
 config_train = {
-            #"sample_batch_size": 200,
             "train_batch_size": 1200,
-            #"sgd_minibatch_size": 1200,
-            #"num_sgd_iter": 3,
-            #"lr":1e-3,
-            #"vf_loss_coeff": 0.5,
             "horizon":  30,
             "num_gpus": 0,
             "model":{"fcnet_hiddens": [64, 64]},
@@ -43,7 +38,6 @@ else:
         "run": "PPO",
         "config": config_train,
         "env": TwoStageAmp,
-        #"restore": trials[0]._checkpoint.value},
         "restore": args.checkpoint_dir,
         "checkpoint_freq":1},
     })

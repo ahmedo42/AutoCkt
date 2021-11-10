@@ -10,7 +10,6 @@ import random
 import time
 import pprint
 import yaml
-import IPython
 debug = False
 
 class NgSpiceWrapper(object):

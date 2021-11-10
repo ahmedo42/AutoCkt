@@ -8,7 +8,6 @@ import argparse
 import json
 import os
 import pickle
-import IPython
 import numpy as np
 
 import gym

@@ -2,7 +2,6 @@ import numpy as np
 import random
 import yaml
 import os
-import IPython
 import argparse
 from collections import OrderedDict
 import pickle
