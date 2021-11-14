@@ -6,17 +6,12 @@ from gym import spaces
 
 import numpy as np
 import random
-import psutil
 
 from multiprocessing.dummy import Pool as ThreadPool
 from collections import OrderedDict
 import yaml
 import yaml.constructor
-import statistics
-import os
 import IPython
-import itertools
-from eval_engines.util.core import *
 import pickle
 import os
 
@@ -173,7 +168,6 @@ class TwoStageAmp(gym.Env):
         action = list(np.reshape(np.array(action),(np.array(action).shape[0],)))
         self.cur_params_idx = self.cur_params_idx + np.array([self.action_meaning[a] for a in action])
 
-#        self.cur_params_idx = self.cur_params_idx + np.array(self.action_arr[int(action)])
         self.cur_params_idx = np.clip(self.cur_params_idx, [0]*len(self.params_id), [(len(param_vec)-1) for param_vec in self.params])
         #Get current specs and normalize
         self.cur_specs = self.update(self.cur_params_idx)
