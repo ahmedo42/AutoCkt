@@ -3,3 +3,5 @@ tensorboard
 pyyaml
 ray
 gym
+lz4
+hiredis

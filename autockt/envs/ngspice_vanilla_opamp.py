@@ -3,19 +3,16 @@ A new ckt environment based on a new structure of MDP
 """
 import gym
 from gym import spaces
-
 import numpy as np
 import random
-
 from multiprocessing.dummy import Pool as ThreadPool
 from collections import OrderedDict
 import yaml
 import yaml.constructor
-import IPython
 import pickle
 import os
 
-from eval_engines.ngspice.TwoStageClass import *
+from autockt.eval_engines.ngspice.TwoStageClass import *
 
 #way of ordering the way a yaml file is read
 class OrderedDictYAMLLoader(yaml.Loader):
@@ -57,7 +54,7 @@ class TwoStageAmp(gym.Env):
 
     #obtains yaml file
     path = os.getcwd()
-    CIR_YAML = path+'/eval_engines/ngspice/ngspice_inputs/yaml_files/two_stage_opamp.yaml'
+    CIR_YAML = path+'/autockt/eval_engines/ngspice/ngspice_inputs/yaml_files/two_stage_opamp.yaml'
 
     def __init__(self, env_config):
         self.multi_goal = env_config.get("multi_goal",False)
@@ -232,14 +229,3 @@ class TwoStageAmp(gym.Env):
         cur_specs = np.array(list(cur_specs.values()))
 
         return cur_specs
-
-def main():
-  env_config = {"generalize":True, "valid":True}
-  env = TwoStageAmp(env_config)
-  env.reset()
-  env.step([2,2,2,2,2,2,2])
-
-  IPython.embed()
-
-if __name__ == "__main__":
-  main()

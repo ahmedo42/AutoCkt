@@ -16,22 +16,6 @@ You might need to install some packages further using pip if necessary. To ensur
 
 NGspice 2.7 needs to be installed separately, via this [installation link](https://sourceforge.net/projects/ngspice/files/ng-spice-rework/old-releases/27/). Page 607 of the pdf manual on the website has instructions on how to install. Note that you might need to remove some of the flags to get it to install correctly for your machine. 
 
-## Code Setup
-The code is setup as follows:
-
-<img src=readme_images/flowchart.png width="500">
-
-The top level directory contains two sub-directories:
-* AutoCkt/: contains all of the reinforcement code
-    * val_autobag_ray.py: top level RL script, used to set hyperparameters and run training
-    * rollout.py: used for validation of the trained agent, see file for how to run
-    * envs/ directory: contains all OpenAI Gym environments. These function as the agent in the RL loop and contain information about parameter space, valid action steps and reward.
-* eval\_engines/: Contains all of the code pertaining to simulators
-    * ngspice/: this directory runs all NGSpice related scripts.
-        * netlist_templates: the exported netlist file modified using Jinja to update any MOS parameters
-        * specs_test/: a directory containing a unique yaml file for each circuit with information about design specifications, parameter ranges, and how to normalize. 
-        * script_test/: directory with files that test functionality of interface scripts  
-
 ## Training AutoCkt
 Make sure that you are in the Anaconda environment. Before running training, the circuit netlist must be modified in order to point to the right library files in your directory. To do this, run the following command:
 ```
