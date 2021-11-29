@@ -6,7 +6,7 @@ import yaml
 
 debug = False
 
-from eval_engines.ngspice.ngspice_wrapper import NgSpiceWrapper
+from autockt.eval_engines.ngspice.ngspice_wrapper import NgSpiceWrapper
 
 class TwoStageClass(NgSpiceWrapper):
 
