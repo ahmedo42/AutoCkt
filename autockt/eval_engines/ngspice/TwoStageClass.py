@@ -2,7 +2,6 @@ import numpy as np
 import os
 import scipy.interpolate as interp
 import scipy.optimize as sciopt
-import yaml
 
 debug = False
 

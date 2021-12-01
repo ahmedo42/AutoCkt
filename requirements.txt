@@ -1,7 +1,8 @@
 torch
-tensorboard
+tensorboardX
 pyyaml
 ray
+ray[tune]
 gym
 lz4
 hiredis

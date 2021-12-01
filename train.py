@@ -12,10 +12,10 @@ ray.init()
 #configures training of the agent with associated hyperparameters
 #See Ray documentation for details on each parameter
 config_train = {
-            "train_batch_size": 1024,
+            "train_batch_size": 1200,
             "horizon":  30,
             "model":{"fcnet_hiddens": [64, 64]},
-            "num_workers": 2,
+            "num_workers": 1,
             "env_config":{"generalize":True, "run_valid":False},
             }
 

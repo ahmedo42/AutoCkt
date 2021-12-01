@@ -5,6 +5,7 @@ import gym
 from gym import spaces
 import numpy as np
 import random
+import IPython
 from multiprocessing.dummy import Pool as ThreadPool
 from collections import OrderedDict
 import yaml
@@ -50,7 +51,7 @@ class TwoStageAmp(gym.Env):
     metadata = {'render.modes': ['human']}
 
     PERF_LOW = -1
-    PERF_HIGH = 0
+    PERF_HIGH = 1
 
     #obtains yaml file
     path = os.getcwd()
@@ -98,10 +99,9 @@ class TwoStageAmp(gym.Env):
         self.sim_env = TwoStageClass(yaml_path=TwoStageAmp.CIR_YAML, num_process=1, path=TwoStageAmp.path) 
         self.action_meaning = [-1,0,2] 
         self.action_space = spaces.Tuple([spaces.Discrete(len(self.action_meaning))]*len(self.params_id))
-        #self.action_space = spaces.Discrete(len(self.action_meaning)**len(self.params_id))
-        self.observation_space = spaces.Box(
-            low=np.array([TwoStageAmp.PERF_LOW]*2*len(self.specs_id)+len(self.params_id)*[1]),
-            high=np.array([TwoStageAmp.PERF_HIGH]*2*len(self.specs_id)+len(self.params_id)*[1]))
+        low_bound = np.array([TwoStageAmp.PERF_LOW]*2*len(self.specs_id)+len(self.params_id)*[0])
+        high_bound = np.array([TwoStageAmp.PERF_HIGH]*2*len(self.specs_id)+len(self.params_id)*[100])
+        self.observation_space = spaces.Box(low = low_bound , high=high_bound ,dtype=np.float32)
 
         #initialize current param/spec observations
         self.cur_specs = np.zeros(len(self.specs_id), dtype=np.float32)
@@ -221,6 +221,7 @@ class TwoStageAmp(gym.Env):
         """
         #impose constraint tail1 = in
         #params_idx[0] = params_idx[3]
+        params_idx = params_idx.astype(np.int32)
         params = [self.params[i][params_idx[i]] for i in range(len(self.params_id))]
         param_val = [OrderedDict(list(zip(self.params_id,params)))]
         
