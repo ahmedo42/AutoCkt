@@ -1,11 +1,10 @@
-import numpy as np
 import os
+
+import numpy as np
 import scipy.interpolate as interp
 import scipy.optimize as sciopt
-
-debug = False
-
 from autockt.eval_engines.ngspice.ngspice_wrapper import NgSpiceWrapper
+
 
 class TwoStageClass(NgSpiceWrapper):
 

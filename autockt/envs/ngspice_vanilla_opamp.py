@@ -1,51 +1,16 @@
-"""
-A new ckt environment based on a new structure of MDP
-"""
-import gym
-from gym import spaces
-import numpy as np
+import os
+import pickle
 import random
-import IPython
-from multiprocessing.dummy import Pool as ThreadPool
 from collections import OrderedDict
+
+import gym
+import numpy as np
 import yaml
 import yaml.constructor
-import pickle
-import os
-
 from autockt.eval_engines.ngspice.TwoStageClass import *
+from autockt.utils import OrderedDictYAMLLoader
+from gym import spaces
 
-#way of ordering the way a yaml file is read
-class OrderedDictYAMLLoader(yaml.Loader):
-    """
-    A YAML loader that loads mappings into ordered dictionaries.
-    """
-
-    def __init__(self, *args, **kwargs):
-        yaml.Loader.__init__(self, *args, **kwargs)
-
-        self.add_constructor(u'tag:yaml.org,2002:map', type(self).construct_yaml_map)
-        self.add_constructor(u'tag:yaml.org,2002:omap', type(self).construct_yaml_map)
-
-    def construct_yaml_map(self, node):
-        data = OrderedDict()
-        yield data
-        value = self.construct_mapping(node)
-        data.update(value)
-
-    def construct_mapping(self, node, deep=False):
-        if isinstance(node, yaml.MappingNode):
-            self.flatten_mapping(node)
-        else:
-            raise yaml.constructor.ConstructorError(None, None,
-                                                    'expected a mapping node, but found %s' % node.id, node.start_mark)
-
-        mapping = OrderedDict()
-        for key_node, value_node in node.value:
-            key = self.construct_object(key_node, deep=deep)
-            value = self.construct_object(value_node, deep=deep)
-            mapping[key] = value
-        return mapping
 
 class TwoStageAmp(gym.Env):
     metadata = {'render.modes': ['human']}
@@ -140,7 +105,6 @@ class TwoStageAmp(gym.Env):
                 for spec in list(self.specs.values()):
                     self.specs_ideal.append(spec[idx])
                 self.specs_ideal = np.array(self.specs_ideal)
-        #print("num total:"+str(self.num_os))
 
         #applicable only when you have multiple goals, normalizes everything to some global_g
         self.specs_ideal_norm = self.lookup(self.specs_ideal, self.global_g)
@@ -179,15 +143,11 @@ class TwoStageAmp(gym.Env):
             print('params = ', self.cur_params_idx)
             print('specs:', self.cur_specs)
             print('ideal specs:', self.specs_ideal)
-            print('re:', reward)
             print('-'*10)
 
         self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params_idx])
         self.env_steps = self.env_steps + 1
 
-        #print('cur ob:' + str(self.cur_specs))
-        #print('ideal spec:' + str(self.specs_ideal))
-        #print(reward)
         return self.ob, reward, done, {}
 
     def lookup(self, spec, goal_spec):
@@ -219,8 +179,6 @@ class TwoStageAmp(gym.Env):
         :param action: an int between 0 ... n-1
         :return:
         """
-        #impose constraint tail1 = in
-        #params_idx[0] = params_idx[3]
         params_idx = params_idx.astype(np.int32)
         params = [self.params[i][params_idx[i]] for i in range(len(self.params_id))]
         param_val = [OrderedDict(list(zip(self.params_id,params)))]

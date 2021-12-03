@@ -88,7 +88,7 @@ def run(args, parser):
         with open(config_path) as f:
             config = json.load(f)
         if "num_workers" in config:
-            config["num_workers"] = 0#min(2, config["num_workers"])
+            config["num_workers"] = 0
 
     if not args.env:
         if not config.get("env"):
@@ -109,7 +109,6 @@ def unlookup(norm_spec, goal_spec):
 
 def rollout(agent, env_name, num_steps, out="assdf", no_render=True):
     if hasattr(agent, "local_evaluator"):
-        #env = agent.local_evaluator.env
         env_config = {"generalize":True,"num_valid":args.num_val_specs, "save_specs":False, "run_valid":True}
         if env_name == "opamp-v0":
             env = TwoStageAmp(env_config=env_config)
@@ -175,14 +174,12 @@ def rollout(agent, env_name, num_steps, out="assdf", no_render=True):
             action_array = []
             pickle.dump(action_arr_comp, open("action_arr_test", "wb"))
         else:
-            obs_nreached.append(ideal_spec)          #save unreached observation 
+            obs_nreached.append(ideal_spec)
             action_array=[]
         if out is not None:
             rollouts.append(rollout_num)
         print("Episode reward", reward_total)
         rollout_steps+=1
-        #if out is not None:
-            #pickle.dump(rollouts, open(str(out)+'reward', "wb"))
         pickle.dump(obs_reached, open("opamp_obs_reached_test","wb"))
         pickle.dump(obs_nreached, open("opamp_obs_nreached_test","wb"))
         print("Specs reached: " + str(reached_spec) + "/" + str(len(obs_nreached))) 
