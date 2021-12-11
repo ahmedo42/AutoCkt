@@ -110,7 +110,7 @@ class TwoStageAmp(gym.Env):
         self.specs_ideal_norm = self.lookup(self.specs_ideal, self.global_g)
 
         #initialize current parameters
-        self.cur_params_idx = np.array([33, 33, 33, 33, 33, 14, 20])
+        self.cur_params_idx = np.ones(len(self.params_id))
         self.cur_specs = self.update(self.cur_params_idx)
         cur_spec_norm = self.lookup(self.cur_specs, self.global_g)
         reward = self.reward(self.cur_specs, self.specs_ideal)
@@ -156,20 +156,16 @@ class TwoStageAmp(gym.Env):
         return norm_spec
     
     def reward(self, spec, goal_spec):
-        '''
+        """
         Reward: doesn't penalize for overshooting spec, is negative
-        '''
+        """
         rel_specs = self.lookup(spec, goal_spec)
-        pos_val = [] 
         reward = 0.0
         for i,rel_spec in enumerate(rel_specs):
             if(self.specs_id[i] == 'ibias_max'):
-                rel_spec = rel_spec*-1.0#/10.0
+                rel_spec = rel_spec*-1.0
             if rel_spec < 0:
                 reward += rel_spec
-                pos_val.append(0)
-            else:
-                pos_val.append(1)
 
         return reward if reward < -0.02 else 10
 

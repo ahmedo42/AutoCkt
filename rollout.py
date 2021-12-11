@@ -99,6 +99,7 @@ def run(args, parser):
 
     cls = get_agent_class(args.run)
     agent = cls(env=args.env, config=config)
+    args.checkpoint += "/" + args.checkpoint.split('/')[-1]
     agent.restore(args.checkpoint)
     num_steps = int(args.steps)
     rollout(agent, args.env, num_steps, args.out, args.no_render)
@@ -108,12 +109,9 @@ def unlookup(norm_spec, goal_spec):
     return spec
 
 def rollout(agent, env_name, num_steps, out="assdf", no_render=True):
-    if hasattr(agent, "local_evaluator"):
-        env_config = {"generalize":True,"num_valid":args.num_val_specs, "save_specs":False, "run_valid":True}
-        if env_name == "opamp-v0":
-            env = TwoStageAmp(env_config=env_config)
-    else:
-        env = gym.make(env_name)
+    env_config = {"generalize":True,"num_valid":args.num_val_specs, "save_specs":False, "run_valid":True}
+    if env_name == "opamp-v0":
+        env = TwoStageAmp(env_config=env_config)
 
     #get unnormlaized specs
     norm_spec_ref = env.global_g
