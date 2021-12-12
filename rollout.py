@@ -99,7 +99,6 @@ def run(args, parser):
 
     cls = get_agent_class(args.run)
     agent = cls(env=args.env, config=config)
-    args.checkpoint += "/" + args.checkpoint.split('/')[-1]
     agent.restore(args.checkpoint)
     num_steps = int(args.steps)
     rollout(agent, args.env, num_steps, args.out, args.no_render)

@@ -39,13 +39,13 @@ reporter = CLIReporter(max_report_frequency=args.log_frequency)
 #If checkpoint fails for any reason, training can be restored 
 trials = tune.run_experiments({
     "train_45nm_ngspice": {
+    "run": args.algo,
     "checkpoint_freq":5,
     "keep_checkpoints_num":1,
-    "run": args.algo,
+    "local_dir":args.output_path,
     "env": TwoStageAmp,
     "stop": {"episode_reward_mean": -0.02},
     "checkpoint_at_end":True,
-    "config": config_train},
-    "progress_reporter":reporter,
-    "local_dir":args.output_path,
-})
+    "config": config_train}},
+    progress_reporter=reporter
+)
