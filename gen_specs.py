@@ -32,11 +32,11 @@ def gen_data(CIR_YAML, env, num_specs):
 
 def main():
   parser = argparse.ArgumentParser()
-  parser.add_argument('--num_specs', type=str)
+  parser.add_argument("--num_specs", type=int,default=100)
   args = parser.parse_args()
   CIR_YAML = "autockt/eval_engines/ngspice/ngspice_inputs/yaml_files/two_stage_opamp.yaml"
   
-  gen_data(CIR_YAML, "two_stage_opamp", int(args.num_specs))
+  gen_data(CIR_YAML, "two_stage_opamp", args.num_specs)
 
 if __name__=="__main__":
   main()

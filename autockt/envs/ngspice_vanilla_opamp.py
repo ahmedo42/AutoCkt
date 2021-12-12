@@ -70,7 +70,7 @@ class TwoStageAmp(gym.Env):
 
         #initialize current param/spec observations
         self.cur_specs = np.zeros(len(self.specs_id), dtype=np.float32)
-        self.cur_params_idx = np.zeros(len(self.params_id), dtype=np.int32)
+        self.cur_params = np.zeros(len(self.params_id), dtype=np.int32)
 
         #Get the g* (overall design spec) you want to reach
         self.global_g = []
@@ -110,13 +110,13 @@ class TwoStageAmp(gym.Env):
         self.specs_ideal_norm = self.lookup(self.specs_ideal, self.global_g)
 
         #initialize current parameters
-        self.cur_params_idx = np.ones(len(self.params_id))
-        self.cur_specs = self.update(self.cur_params_idx)
+        self.cur_params = np.array([33, 33, 33, 33, 33, 14, 20])
+        self.cur_specs = self.update(self.cur_params)
         cur_spec_norm = self.lookup(self.cur_specs, self.global_g)
         reward = self.reward(self.cur_specs, self.specs_ideal)
 
         #observation is a combination of current specs distance from ideal, ideal spec, and current param vals
-        self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params_idx])
+        self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params])
         return self.ob
  
     def step(self, action):
@@ -127,11 +127,11 @@ class TwoStageAmp(gym.Env):
 
         #Take action that RL agent returns to change current params
         action = list(np.reshape(np.array(action),(np.array(action).shape[0],)))
-        self.cur_params_idx = self.cur_params_idx + np.array([self.action_meaning[a] for a in action])
+        self.cur_params = self.cur_params + np.array([self.action_meaning[a] for a in action])
 
-        self.cur_params_idx = np.clip(self.cur_params_idx, [0]*len(self.params_id), [(len(param_vec)-1) for param_vec in self.params])
+        self.cur_params = np.clip(self.cur_params, [0]*len(self.params_id), [(len(param_vec)-1) for param_vec in self.params])
         #Get current specs and normalize
-        self.cur_specs = self.update(self.cur_params_idx)
+        self.cur_specs = self.update(self.cur_params)
         cur_spec_norm  = self.lookup(self.cur_specs, self.global_g)
         reward = self.reward(self.cur_specs, self.specs_ideal)
         done = False
@@ -140,12 +140,12 @@ class TwoStageAmp(gym.Env):
         if (reward >= 10):
             done = True
             print('-'*10)
-            print('params = ', self.cur_params_idx)
+            print('params = ', self.cur_params)
             print('specs:', self.cur_specs)
             print('ideal specs:', self.specs_ideal)
             print('-'*10)
 
-        self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params_idx])
+        self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params])
         self.env_steps = self.env_steps + 1
 
         return self.ob, reward, done, {}
