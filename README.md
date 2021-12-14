@@ -10,7 +10,7 @@ pip install -r requirements.txt
 
 Install Ngspice for simulation
 
-On ubuntu
+On Ubuntu/Colab/Kaggle
 ```
 sudo apt-get install -y ngspice
 ```
@@ -26,11 +26,12 @@ python gen_specs.py --num_specs ##
 ```
 The result is a pickle file dumped to the gen_specs folder.
 
-To train the agent:
+To train the agent: 
 ```
-python train.py
+python train.py 
 ```
-The training checkpoints will be saved in your home directory under ray\_results. Tensorboard can be used to load reward and loss plots using the command:
+
+The training checkpoints will be saved under `results` in the main direcory. Tensorboard can be used to load reward and loss plots using the command:
 
 ```
 tensorboard --logdir path/to/logs

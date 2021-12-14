@@ -15,8 +15,8 @@ from gym import spaces
 class TwoStageAmp(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    PERF_LOW = -1
-    PERF_HIGH = 1
+    PERF_LOW = -100
+    PERF_HIGH = 100
 
     #obtains yaml file
     path = os.getcwd()
