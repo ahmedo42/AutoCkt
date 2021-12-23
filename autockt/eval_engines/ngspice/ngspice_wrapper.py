@@ -53,12 +53,7 @@ class NgSpiceWrapper(object):
                 regex = re.compile("\.include\s*\"(.*?)\"")
                 found = regex.search(line)
                 if found:
-                    # current_fpath = os.path.realpath(__file__)
-                    # parent_path = os.path.abspath(os.path.join(current_fpath, os.pardir))
-                    # parent_path = os.path.abspath(os.path.join(parent_path, os.pardir))
-                    # path_to_model = os.path.join(parent_path, 'spice_models/45nm_bulk.txt')
-                    # lines[line_num] = lines[line_num].replace(found.group(1), path_to_model)
-                    pass # do not change the model path
+                    pass 
             if '.param' in line:
                 for key, value in state.items():
                     regex = re.compile("%s=(\S+)" % (key))

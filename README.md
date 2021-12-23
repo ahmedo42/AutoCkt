@@ -1,6 +1,7 @@
 # AutoCkt: Deep Reinforcement Learning of Analog Circuit Designs
 Code for [Deep Reinforcement Learning of Analog Circuit Designs](https://arxiv.org/abs/2001.01808).
 
+
 ## Setup
 Install Dependencies
 
@@ -8,13 +9,16 @@ Install Dependencies
 pip install -r requirements.txt
 ```
 
-Install Ngspice for simulation
-
-On Ubuntu/Colab/Kaggle
+Install Ngspice for simulation, On Ubuntu/Colab/Kaggle
 ```
 sudo apt-get install -y ngspice
 ```
-## Training AutoCkt
+
+
+## Pseudocode of The training algorithm
+<img src="./assets/pseudocode.png" width="500" height="400"></img>
+
+## Training
 Before running training, the circuit netlist must be modified in order to point to the right library files in your directory. To do this, run the following command:
 ```
 python autockt/eval_engines/ngspice/ngspice_inputs/correct_inputs.py 
@@ -22,7 +26,7 @@ python autockt/eval_engines/ngspice/ngspice_inputs/correct_inputs.py
 
 To generate the design specifications that the agent trains on, run:
 ```
-python gen_specs.py --num_specs ##
+python gen_specs.py --num_specs ## --env ##
 ```
 The result is a pickle file dumped to the gen_specs folder.
 
@@ -36,7 +40,7 @@ The training checkpoints will be saved under `results` in the main direcory. Ten
 ```
 tensorboard --logdir path/to/logs
 ```
-## Validating AutoCkt
+## Validation
 The rollout script takes the trained agent and gives it new specs that the agent has never seen before. To generate new design specs, run the gen_specs.py file again with your desired number of specs to validate on. To run validation:
 
 ```

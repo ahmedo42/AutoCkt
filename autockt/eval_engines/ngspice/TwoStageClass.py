@@ -9,12 +9,6 @@ from autockt.eval_engines.ngspice.ngspice_wrapper import NgSpiceWrapper
 class TwoStageClass(NgSpiceWrapper):
 
     def translate_result(self, output_path):
-        """
-
-        :param output_path:
-        :return
-            result: dict(spec_kwds, spec_value)
-        """
 
         # use parse output here
         freq, vout,  ibias = self.parse_output(output_path)
@@ -77,7 +71,7 @@ class TwoStageClass(NgSpiceWrapper):
             return -180
 
 
-    def _get_best_crossing(cls, xvec, yvec, val):
+    def _get_best_crossing(self, xvec, yvec, val):
         interp_fun = interp.InterpolatedUnivariateSpline(xvec, yvec)
 
         def fzero(x):

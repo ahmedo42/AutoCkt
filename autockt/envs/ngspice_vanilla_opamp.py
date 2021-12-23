@@ -109,7 +109,8 @@ class TwoStageAmp(gym.Env):
         #applicable only when you have multiple goals, normalizes everything to some global_g
         self.specs_ideal_norm = self.lookup(self.specs_ideal, self.global_g)
 
-        #initialize current parameters
+        #initialize current parameters 
+        # cur_params should be initialized to be mid-range as in the paper.
         self.cur_params = np.array([33, 33, 33, 33, 33, 14, 20])
         self.cur_specs = self.update(self.cur_params)
         cur_spec_norm = self.lookup(self.cur_specs, self.global_g)
