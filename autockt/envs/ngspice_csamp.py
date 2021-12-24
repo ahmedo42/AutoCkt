@@ -11,7 +11,7 @@ from autockt.eval_engines.ngspice.csamp import *
 from autockt.utils import OrderedDictYAMLLoader
 from gym import spaces
 
-class CsAmp(gym.env):
+class CsAmp(gym.Env):
     def __init__(self,env_config):
         pass
 

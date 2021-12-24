@@ -25,7 +25,7 @@ ray.init()
 config_train = {
             "train_batch_size": args.batch_size,
             "horizon":  args.horizon,
-            "model":{"fcnet_hiddens": [64, 64]},
+            "model":{"fcnet_hiddens": [50, 50, 50]},
             "num_workers": args.num_workers,
             "env_config":{"generalize":True, "run_valid":False},
             "framework":args.framework,
