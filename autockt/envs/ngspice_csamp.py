@@ -11,22 +11,9 @@ from autockt.eval_engines.ngspice.csamp import *
 from autockt.utils import OrderedDictYAMLLoader
 from gym import spaces
 
-class CsAmp(gym.Env):
-    def __init__(self,env_config):
-        pass
-
-    def reset(self):
-        pass
-
-    def reward(self):
-        pass
-
-    def step(self,action):
-        pass
-    
-    def lookup(self):
-        pass
-
-    def update(self):
-        pass
+class CsAmp(NgspiceEnv):
+    def __init__(self, env_config):
+        self.CIR_YAML = os.getcwd()+'/autockt/eval_engines/ngspice/ngspice_inputs/yaml_files/cs_amp.yaml'
+        self.sim_env = CsAmpClass(yaml_path=self.CIR_YAML, num_process=1, path=os.getcwd()) 
+        super().__init__(env_config)
 

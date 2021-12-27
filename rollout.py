@@ -10,6 +10,7 @@ from ray.rllib.agents.registry import get_agent_class
 from ray.tune.registry import register_env
 
 from autockt.envs.ngspice_vanilla_opamp import TwoStageAmp
+from autockt.envs.ngspice_csamp import CsAmp
 
 EXAMPLE_USAGE = """
 Example Usage via RLlib CLI:
@@ -25,6 +26,7 @@ Example Usage via executable:
 # ModelCatalog.register_custom_model("pa_model", ParametricActionsModel)
 # register_env("pa_cartpole", lambda _: ParametricActionCartpole(10))
 register_env("opamp-v0", lambda config:TwoStageAmp(config))
+register_env("csamp-v0", lambda config:CsAmp(config))
 
 def create_parser(parser_creator=None):
     parser_creator = parser_creator or argparse.ArgumentParser
@@ -111,6 +113,9 @@ def rollout(agent, env_name, num_steps, out="assdf", no_render=True):
     env_config = {"generalize":True,"num_valid":args.num_val_specs, "save_specs":False, "run_valid":True}
     if env_name == "opamp-v0":
         env = TwoStageAmp(env_config=env_config)
+
+    elif env_name == "csamp-v0":
+        env = CsAmp(env_config=env_config)
 
     #get unnormlaized specs
     norm_spec_ref = env.global_g

@@ -10,7 +10,8 @@ params:
   mn5:  !!python/tuple [1, 100, 1]
   cc:   !!python/tuple [!!float 0.1e-12, !!float 10.0e-12, !!float 0.1e-12]
 
-normalize: !!python/tuple [350, 950000.0, 60, 0.001]
+#Every specification output will be normlaized in the order of (gain, ibias, pm, ugbw)
+normalize: !!python/tuple [350, 0.001, 60, 950000.0]
 
 #during training, at reset a specification will be chosen at random between [min,max,#]
 target_specs:
