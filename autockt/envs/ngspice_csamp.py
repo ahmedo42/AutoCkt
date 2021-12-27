@@ -8,6 +8,7 @@ import numpy as np
 import yaml
 import yaml.constructor
 from autockt.eval_engines.ngspice.csamp import *
+from autockt.envs.ngspice_env import  NgspiceEnv
 from autockt.utils import OrderedDictYAMLLoader
 from gym import spaces
 

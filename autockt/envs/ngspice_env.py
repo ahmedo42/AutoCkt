@@ -52,7 +52,6 @@ class NgspiceEnv(gym.Env):
             self.params.append(param_vec)
         
         #This should be overloaded in each env
-        self.sim_env = None
         self.action_meaning = [-1,0,1] 
         self.action_space = spaces.Tuple([spaces.Discrete(len(self.action_meaning))]*len(self.params_id))
         low_bound = np.array([-np.inf]*2*len(self.specs_id)+[-np.inf]*len(self.params_id))
