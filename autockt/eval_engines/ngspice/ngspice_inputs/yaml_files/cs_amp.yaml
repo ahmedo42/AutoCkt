@@ -6,6 +6,8 @@ target_specs:
   gain_min: !!python/tuple [!!float 3.0,!!float 10.0]
   ibias_max:  !!python/tuple [0.0001, 0.01]
 
+normalize: !!python/tuple [950000.0, 350, 0.001]
+
 params:
   vbias: !!python/tuple [0, !!float 1.8, !!float 50.0e-3]
   rload: !!python/tuple [10.0, !!float 5.0e3, 20]

@@ -98,7 +98,7 @@ class NgspiceEnv(gym.Env):
                 self.specs_ideal = np.array(self.specs_ideal)
 
         #initialize current parameters 
-        self.cur_params = np.array([param_vec[len(param_vec)//2] for param_vec in self.params])
+        self.cur_params = np.array([len(param_vec)//2 for param_vec in self.params])
         self.cur_specs = self.update(self.cur_params)
 
         #applicable only when you have multiple goals, normalizes everything to some global_g
