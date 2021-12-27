@@ -15,8 +15,8 @@ from gym import spaces
 class TwoStageAmp(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    PERF_LOW = -100
-    PERF_HIGH = 100
+    PERF_LOW = -1
+    PERF_HIGH = 1
 
     #obtains yaml file
     path = os.getcwd()
@@ -55,17 +55,22 @@ class TwoStageAmp(gym.Env):
         params = yaml_data['params']
         self.params = []
         self.params_id = list(params.keys())
+        min_vals = []
+        max_vals = []
 
         for value in params.values():
             param_vec = np.arange(value[0], value[1], value[2])
+            min_vals.append(value[0])
+            max_vals.append(value[1])
             self.params.append(param_vec)
         
         #initialize sim environment
+        min_params = []
         self.sim_env = TwoStageClass(yaml_path=TwoStageAmp.CIR_YAML, num_process=1, path=TwoStageAmp.path) 
         self.action_meaning = [-1,0,2] 
         self.action_space = spaces.Tuple([spaces.Discrete(len(self.action_meaning))]*len(self.params_id))
-        low_bound = np.array([TwoStageAmp.PERF_LOW]*2*len(self.specs_id)+len(self.params_id)*[0])
-        high_bound = np.array([TwoStageAmp.PERF_HIGH]*2*len(self.specs_id)+len(self.params_id)*[100])
+        low_bound = np.array([TwoStageAmp.PERF_LOW]*2*len(self.specs_id)+min_vals)
+        high_bound = np.array([TwoStageAmp.PERF_HIGH]*2*len(self.specs_id)+max_vals)
         self.observation_space = spaces.Box(low = low_bound , high=high_bound ,dtype=np.float32)
 
         #initialize current param/spec observations
@@ -114,7 +119,6 @@ class TwoStageAmp(gym.Env):
         self.cur_params = np.array([33, 33, 33, 33, 33, 14, 20])
         self.cur_specs = self.update(self.cur_params)
         cur_spec_norm = self.lookup(self.cur_specs, self.global_g)
-        reward = self.reward(self.cur_specs, self.specs_ideal)
 
         #observation is a combination of current specs distance from ideal, ideal spec, and current param vals
         self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params])
