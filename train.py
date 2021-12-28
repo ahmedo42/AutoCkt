@@ -1,7 +1,6 @@
 import ray
 import ray.tune as tune
 from ray.tune import CLIReporter
-from ray.rllib.agents import ppo
 from autockt.envs.ngspice_vanilla_opamp import TwoStageAmp
 from autockt.envs.ngspice_csamp import CsAmp
 

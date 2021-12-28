@@ -112,9 +112,11 @@ def unlookup(norm_spec, goal_spec):
 def rollout(agent, env_name, num_steps, out="assdf", no_render=True):
     env_config = {"generalize":True,"num_valid":args.num_val_specs, "save_specs":False, "run_valid":True}
     if env_name == "opamp-v0":
+        env_config["env"] = "two_stage_opamp"
         env = TwoStageAmp(env_config=env_config)
 
     elif env_name == "csamp-v0":
+        env_config["env"] = "cs_amp"
         env = CsAmp(env_config=env_config)
 
     #get unnormlaized specs
