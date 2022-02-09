@@ -184,8 +184,8 @@ def rollout(agent, env_name, num_steps, out="assdf", no_render=True):
             rollouts.append(rollout_num)
         print("Episode reward", reward_total)
         rollout_steps+=1
-        pickle.dump(obs_reached, open("opamp_obs_reached_test","wb"))
-        pickle.dump(obs_nreached, open("opamp_obs_nreached_test","wb"))
+        pickle.dump(obs_reached, open("{}_obs_reached_test".format(env_config["env"]),"wb"))
+        pickle.dump(obs_nreached, open("{}_obs_nreached_test".format(env_config["env"]),"wb"))
         print("Specs reached: " + str(reached_spec) + "/" + str(len(obs_nreached))) 
 
     print("Num specs reached: " + str(reached_spec) + "/" + str(args.num_val_specs))
