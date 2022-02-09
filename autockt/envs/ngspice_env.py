@@ -53,7 +53,7 @@ class NgspiceEnv(gym.Env):
         
         #This should be overloaded in each env
         self.action_meaning = [-1,0,1] 
-        self.action_space = spaces.Tuple([spaces.Discrete(len(self.action_meaning),start=-1)]*len(self.params_id))
+        self.action_space = spaces.Tuple([spaces.Discrete(len(self.action_meaning))]*len(self.params_id))
         low_bound = np.array([-np.inf]*2*len(self.specs_id)+[-np.inf]*len(self.params_id))
         high_bound = np.array([np.inf]*2*len(self.specs_id)+[np.inf]*len(self.params_id))
         self.observation_space = spaces.Box(low = low_bound , high=high_bound ,dtype=np.float32)
