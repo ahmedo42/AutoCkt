@@ -16,6 +16,9 @@ parser.add_argument("--episodes_per_batch",type=int,default=100) # valid only wh
 parser.add_argument("--output_path",type=str,default="./results")
 parser.add_argument("--log_frequency",type=int,default=30) # number of seconds between each log
 parser.add_argument("--env",type=str,default="two_stage_opamp")
+parser.add_argument("--seed",type=int,default=17)
+parser.add_argument("--lr",type=float,default=0.0001)
+
 args = parser.parse_args()
 ray.init()
 
@@ -35,6 +38,8 @@ config_train = {
             "env_config":{"generalize":True, "run_valid":False,"env":args.env},
             "framework":args.framework,
             "episodes_per_batch":args.episodes_per_batch,
+            "seed" : args.seed,
+            "lr" : args.lr,
             }
 
 if args.algo != "ES":
@@ -43,7 +48,7 @@ if args.algo != "ES":
 reporter = CLIReporter(max_report_frequency=args.log_frequency)
 env = env_mapping[args.env]
 
-#Runs training and saves the result in ~/ray_results/train_ngspice_45nm
+#Runs training and saves the result in ~/ray_results/{args.experiment}
 #If checkpoint fails for any reason, training can be restored 
 trials = tune.run_experiments({
     args.experiment: {
