@@ -20,7 +20,6 @@ class NgspiceEnv(gym.Env):
         num_valid = env_config.get("num_valid",50)
         self.specs_save = env_config.get("save_specs", False)
         self.valid = env_config.get("run_valid", False)
-        self.normalize = env_config.get("normalize",True)
         self.specs_path = os.getcwd()+"/autockt/gen_specs/ngspice_specs_gen_"+env_config.get("env",None)
 
         with open(self.CIR_YAML, 'r') as f:
@@ -52,7 +51,7 @@ class NgspiceEnv(gym.Env):
             self.params.append(param_vec)
         
         #This should be overloaded in each env
-        self.action_meaning = [-1,0,1] 
+        self.action_meaning = [-1,0,2] 
         self.action_space = spaces.Tuple([spaces.Discrete(len(self.action_meaning))]*len(self.params_id))
         low_bound = np.array([-np.inf]*2*len(self.specs_id)+[-np.inf]*len(self.params_id))
         high_bound = np.array([np.inf]*2*len(self.specs_id)+[np.inf]*len(self.params_id))
@@ -67,8 +66,8 @@ class NgspiceEnv(gym.Env):
         for spec in list(self.specs.values()):
                 self.global_g.append(float(spec[self.fixed_goal_idx]))
         self.g_star = np.array(self.global_g)
-        if "normalize" in yaml_data:
-            self.global_g = np.array(yaml_data['normalize'])
+        #if "normalize" in yaml_data:
+            #self.global_g = np.array(yaml_data['normalize'])
         
         #objective number (used for validation)
         self.obj_idx = 0
@@ -102,12 +101,9 @@ class NgspiceEnv(gym.Env):
         self.cur_specs = self.update(self.cur_params)
 
         #applicable only when you have multiple goals, normalizes everything to some global_g
-        if self.normalize:
-            self.specs_ideal_norm = self.lookup(self.specs_ideal, self.global_g)
-            cur_spec_norm = self.lookup(self.cur_specs, self.global_g)
-            self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params])
-        else:
-            self.ob = np.concatenate([self.cur_specs, self.specs_ideal, self.cur_params])
+        self.specs_ideal_norm = self.lookup(self.specs_ideal, self.global_g)
+        cur_spec_norm = self.lookup(self.cur_specs, self.global_g)
+        self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params])
         #observation is a combination of current specs distance from ideal, ideal spec, and current param vals
         return self.ob
  
@@ -136,12 +132,8 @@ class NgspiceEnv(gym.Env):
             print('ideal specs:', self.specs_ideal)
             print('-'*10)
 
-        if self.normalize:
-            self.specs_ideal_norm = self.lookup(self.specs_ideal, self.global_g)
-            cur_spec_norm = self.lookup(self.cur_specs, self.global_g)
-            self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params])
-        else:
-            self.ob = np.concatenate([self.cur_specs, self.specs_ideal, self.cur_params])
+        cur_spec_norm = self.lookup(self.cur_specs, self.global_g)
+        self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params])
             
         return self.ob, reward, done, {}
 
