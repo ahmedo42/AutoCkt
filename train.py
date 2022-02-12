@@ -17,7 +17,9 @@ parser.add_argument("--output_path",type=str,default="./results")
 parser.add_argument("--log_frequency",type=int,default=30) # number of seconds between each log
 parser.add_argument("--env",type=str,default="two_stage_opamp")
 parser.add_argument("--seed",type=int,default=17)
-parser.add_argument("--lr",type=float,default=0.0001)
+parser.add_argument("--lr",type=float,default=5e-5)
+parser.add_argument("--neurons",type=int,default=64)
+parser.add_argument("--n_layers",type=int,default=2)
 
 args = parser.parse_args()
 ray.init()
@@ -30,10 +32,11 @@ env_mapping = {
     "cs_amp": CsAmp,
 }
 
+model_structure = [args.neurons] * args.n_layers
 config_train = {
             "train_batch_size": args.batch_size,
             "horizon":  args.horizon,
-            "model":{"fcnet_hiddens": [50, 50, 50]},
+            "model":{"fcnet_hiddens": model_structure},
             "num_workers": args.num_workers,
             "env_config":{"generalize":True, "run_valid":False,"env":args.env},
             "framework":args.framework,
