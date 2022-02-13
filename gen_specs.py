@@ -10,7 +10,7 @@ from autockt.utils import OrderedDictYAMLLoader
 
 
 #Generate the design specifications and then save to a pickle file
-def gen_data(CIR_YAML, env, num_specs):
+def gen_data(CIR_YAML, env, num_specs, mode):
   with open(CIR_YAML, 'r') as f:
     yaml_data = yaml.load(f, OrderedDictYAMLLoader)
 
@@ -27,7 +27,7 @@ def gen_data(CIR_YAML, env, num_specs):
   for key,value in specs_range.items():
       specs_range[key] = specs_valid[i]
       i+=1
-  with open("/autockt/gen_specs/ngspice_specs_"+args.mode+'_'+args.env, 'wb') as f:
+  with open("autockt/gen_specs/ngspice_specs_"+mode+'_'+env, 'wb') as f:
     pickle.dump(specs_range,f)
 
 def main():
@@ -38,7 +38,7 @@ def main():
   args = parser.parse_args()
   CIR_YAML = "autockt/eval_engines/ngspice/ngspice_inputs/yaml_files/" + args.env + ".yaml"
   
-  gen_data(CIR_YAML, args.env, args.num_specs)
+  gen_data(CIR_YAML, args.env, args.num_specs, args.mode)
 
 if __name__=="__main__":
   main()

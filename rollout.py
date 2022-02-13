@@ -12,6 +12,14 @@ from ray.tune.registry import register_env
 from autockt.envs.ngspice_vanilla_opamp import TwoStageAmp
 from autockt.envs.ngspice_csamp import CsAmp
 
+EXAMPLE_USAGE = """
+Example Usage via RLlib CLI:
+    rllib rollout /tmp/ray/checkpoint_dir/checkpoint-0 --run DQN
+    --env CartPole-v0 --steps 1000000 --out rollouts.pkl
+Example Usage via executable:
+    ./rollout.py /tmp/ray/checkpoint_dir/checkpoint-0 --run DQN
+    --env CartPole-v0 --steps 1000000 --out rollouts.pkl
+"""
 
 # Note: if you use any custom models or envs, register them here first, e.g.:
 ## register_env("pa_cartpole", lambda _: ParametricActionCartpole(10))
@@ -117,10 +125,7 @@ def rollout(agent, env_name):
     rollout_steps = 0
     reached_spec = 0
     while rollout_steps < args.num_val_specs:
-        if out is not None:
-            rollout_num = []
         state = env.reset()
-        
         done = False
         reward_total = 0.0
         steps=0
