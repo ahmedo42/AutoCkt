@@ -26,7 +26,7 @@ python autockt/eval_engines/ngspice/ngspice_inputs/correct_inputs.py
 
 To generate the design specifications that the agent trains on, run:
 ```
-python gen_specs.py --num_specs ## --env ##
+python gen_specs.py --num_specs ## --env ## --mode ##
 ```
 The result is a pickle file dumped to the gen_specs folder.
 
@@ -44,7 +44,7 @@ tensorboard --logdir path/to/logs
 The rollout script takes the trained agent and gives it new specs that the agent has never seen before. To generate new design specs, run the gen_specs.py file again with your desired number of specs to validate on. To run validation:
 
 ```
-python rollout.py /path/to/ray/checkpoint --run PPO --env opamp-v0 --num_val_specs ### --traj_len ## --no-render
+python rollout.py /path/to/ray/checkpoint --run PPO --env opamp-v0 --num_val_specs ### --traj_len ## 
 ``` 
 * num_val_specs: the number of untrained objectives to test on
 * traj_len: the length of each trajectory

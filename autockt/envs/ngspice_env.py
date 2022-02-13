@@ -18,9 +18,9 @@ class NgspiceEnv(gym.Env):
         self.multi_goal = env_config.get("multi_goal",False)
         self.generalize = env_config.get("generalize",False)
         num_valid = env_config.get("num_valid",50)
-        self.specs_save = env_config.get("save_specs", False)
         self.valid = env_config.get("run_valid", False)
-        self.specs_path = os.getcwd()+"/autockt/gen_specs/ngspice_specs_gen_"+env_config.get("env",None)
+        mode = "valid" if self.valid else "train"
+        self.specs_path = os.getcwd()+"/autockt/gen_specs/ngspice_specs_"+mode+'_'+env_config.get("env",None)
 
         with open(self.CIR_YAML, 'r') as f:
             yaml_data = yaml.load(f, OrderedDictYAMLLoader)
@@ -33,9 +33,6 @@ class NgspiceEnv(gym.Env):
                 specs = pickle.load(f)
             
         self.specs = OrderedDict(sorted(specs.items(), key=lambda k: k[0]))
-        if self.specs_save:
-            with open("specs_"+str(num_valid)+str(random.randint(1,100000)), 'wb') as f:
-                pickle.dump(self.specs, f)
         
         self.specs_ideal = []
         self.specs_id = list(self.specs.keys())

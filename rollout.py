@@ -12,19 +12,9 @@ from ray.tune.registry import register_env
 from autockt.envs.ngspice_vanilla_opamp import TwoStageAmp
 from autockt.envs.ngspice_csamp import CsAmp
 
-EXAMPLE_USAGE = """
-Example Usage via RLlib CLI:
-    rllib rollout /tmp/ray/checkpoint_dir/checkpoint-0 --run DQN
-    --env CartPole-v0 --steps 1000000 --out rollouts.pkl
 
-Example Usage via executable:
-    ./rollout.py /tmp/ray/checkpoint_dir/checkpoint-0 --run DQN
-    --env CartPole-v0 --steps 1000000 --out rollouts.pkl
-"""
 # Note: if you use any custom models or envs, register them here first, e.g.:
-#
-# ModelCatalog.register_custom_model("pa_model", ParametricActionsModel)
-# register_env("pa_cartpole", lambda _: ParametricActionCartpole(10))
+## register_env("pa_cartpole", lambda _: ParametricActionCartpole(10))
 register_env("opamp-v0", lambda config:TwoStageAmp(config))
 register_env("csamp-v0", lambda config:CsAmp(config))
 
@@ -48,15 +38,6 @@ def create_parser(parser_creator=None):
         "tune registry.")
     required_named.add_argument(
         "--env", type=str, help="The gym environment to use.")
-    parser.add_argument(
-        "--no-render",
-        default=False,
-        action="store_const",
-        const=True,
-        help="Surpress rendering of the environment.")
-    parser.add_argument(
-        "--steps", default=10000, help="Number of steps to roll out.")
-    parser.add_argument("--out", default=None, help="Output filename.")
     parser.add_argument(
         "--config",
         default="{}",
@@ -102,15 +83,14 @@ def run(args, parser):
     cls = get_agent_class(args.run)
     agent = cls(env=args.env, config=config)
     agent.restore(args.checkpoint)
-    num_steps = int(args.steps)
-    rollout(agent, args.env, num_steps, args.out, args.no_render)
+    rollout(agent, args.env)
 
 def unlookup(norm_spec, goal_spec):
     spec = -1*np.multiply((norm_spec+1), goal_spec)/(norm_spec-1) 
     return spec
 
-def rollout(agent, env_name, num_steps, out="assdf", no_render=True):
-    env_config = {"generalize":True,"num_valid":args.num_val_specs, "save_specs":False, "run_valid":True}
+def rollout(agent, env_name):
+    env_config = {"generalize":True,"num_valid":args.num_val_specs, "run_valid":True}
     if env_name == "opamp-v0":
         env_config["env"] = "two_stage_opamp"
         env = TwoStageAmp(env_config=env_config)
@@ -128,13 +108,8 @@ def rollout(agent, env_name, num_steps, out="assdf", no_render=True):
             "default"].get_initial_state()
     else:
         state_init = []
-    if state_init:
-        use_lstm = True
-    else:
-        use_lstm = False
 
     rollouts = []
-    next_states = []
     obs_reached = []
     obs_nreached = []
     action_array = []
@@ -150,23 +125,10 @@ def rollout(agent, env_name, num_steps, out="assdf", no_render=True):
         reward_total = 0.0
         steps=0
         while not done and steps < args.traj_len:
-            if use_lstm:
-                action, state_init, logits = agent.compute_action(
-                    state, state=state_init)
-            else:
-                action = agent.compute_action(state)
-                action_array.append(action)
-
+            action = agent.compute_action(state)
+            action_array.append(action)
             next_state, reward, done, _ = env.step(action)
-            print(action)
-            print(reward)
-            print(done)
             reward_total += reward
-            if not no_render:
-                env.render()
-            if out is not None:
-                rollout_num.append(reward)
-                next_states.append(next_state)
             steps += 1
             state = next_state
         norm_ideal_spec = state[spec_num:spec_num+spec_num]
@@ -180,8 +142,6 @@ def rollout(agent, env_name, num_steps, out="assdf", no_render=True):
         else:
             obs_nreached.append(ideal_spec)
             action_array=[]
-        if out is not None:
-            rollouts.append(rollout_num)
         print("Episode reward", reward_total)
         rollout_steps+=1
         pickle.dump(obs_reached, open("{}_obs_reached_test".format(env_config["env"]),"wb"))
