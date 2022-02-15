@@ -2,11 +2,10 @@ dsn_netlist: "autockt/eval_engines/ngspice/ngspice_inputs/netlist/cs_amp.cir"
 num_process: 1
 
 target_specs:
-  bw_min: !!python/tuple [!!float 1.0e9,!!float 3.0e9]
-  gain_min: !!python/tuple [!!float 3.0,!!float 10.0]
-  ibias_max:  !!python/tuple [0.0001, 0.01]
+  bw_min: !!python/tuple [!!float 1.0e9,!!float 1.0e9]
+  gain_min: !!python/tuple [!!float 3.0,!!float 3.0]
+  ibias_max:  !!python/tuple [1.0e-3, 1.0e-3]
 
-normalize: !!python/tuple [950000.0, 350, 0.001]
 
 params:
   vbias: !!python/tuple [0, !!float 1.8, !!float 50.0e-3]

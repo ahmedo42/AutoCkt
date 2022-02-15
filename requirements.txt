@@ -1,6 +1,6 @@
 torch
 tensorboardX
-pyyaml
+pyyaml==5.41
 ray
 ray[tune]
 gym

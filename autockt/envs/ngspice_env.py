@@ -63,8 +63,8 @@ class NgspiceEnv(gym.Env):
         for spec in list(self.specs.values()):
                 self.global_g.append(float(spec[self.fixed_goal_idx]))
         self.g_star = np.array(self.global_g)
-        #if "normalize" in yaml_data:
-            #self.global_g = np.array(yaml_data['normalize'])
+        if "normalize" in yaml_data:
+            self.global_g = np.array(yaml_data['normalize'])
         
         #objective number (used for validation)
         self.obj_idx = 0
@@ -94,7 +94,7 @@ class NgspiceEnv(gym.Env):
                 self.specs_ideal = np.array(self.specs_ideal)
 
         #initialize current parameters to
-        self.cur_params = np.array([len(param_vec)//2 for param_vec in self.params])
+        self.cur_params =  np.array([33, 33, 33, 33, 33, 14, 20])
         self.cur_specs = self.update(self.cur_params)
 
         #applicable only when you have multiple goals, normalizes everything to some global_g
