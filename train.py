@@ -20,6 +20,7 @@ parser.add_argument("--seed",type=int,default=17)
 parser.add_argument("--lr",type=float,default=5e-5)
 parser.add_argument("--neurons",type=int,default=50)
 parser.add_argument("--n_layers",type=int,default=3)
+parser.add_argument("--mid_range_init",action="store_true")
 args = parser.parse_args()
 ray.init()
 
@@ -37,11 +38,12 @@ config_train = {
             "horizon":  args.horizon,
             "model":{"fcnet_hiddens": model_structure},
             "num_workers": args.num_workers,
-            "env_config":{"generalize":True, "run_valid":False,"env":args.env},
+            "env_config":{"generalize":True, "run_valid":False,"env":args.env,"mid_range_init":args.mid_range_init},
             "framework":args.framework,
             "episodes_per_batch":args.episodes_per_batch,
             "seed" : args.seed,
             "lr" : args.lr,
+
             }
 
 if args.algo != "ES":

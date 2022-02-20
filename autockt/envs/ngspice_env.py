@@ -15,8 +15,9 @@ class NgspiceEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
     def __init__(self, env_config):
-        self.multi_goal = env_config.get("multi_goal",False)
-        self.generalize = env_config.get("generalize",False)
+        self.multi_goal = env_config.get("multi_goal",True)
+        self.generalize = env_config.get("generalize",True)
+        self.mid_range_init = env_config.get("mid_range_init",False)
         num_valid = env_config.get("num_valid",50)
         self.valid = env_config.get("run_valid", False)
         mode = "valid" if self.valid else "train"
@@ -94,7 +95,10 @@ class NgspiceEnv(gym.Env):
                 self.specs_ideal = np.array(self.specs_ideal)
 
         #initialize current parameters to
-        self.cur_params =  np.array([33, 33, 33, 33, 33, 14, 20])
+        if self.mid_range_init == True:
+            self.cur_params =   np.array([len(param_vec)//2 for param_vec in self.params])
+        else:
+            self.cur_params =  np.array([33, 33, 33, 33, 33, 14, 20])
         self.cur_specs = self.update(self.cur_params)
 
         #applicable only when you have multiple goals, normalizes everything to some global_g
