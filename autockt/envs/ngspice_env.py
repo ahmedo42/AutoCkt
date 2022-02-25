@@ -64,8 +64,6 @@ class NgspiceEnv(gym.Env):
         for spec in list(self.specs.values()):
                 self.global_g.append(float(spec[self.fixed_goal_idx]))
         self.g_star = np.array(self.global_g)
-        if "normalize" in yaml_data:
-            self.global_g = np.array(yaml_data['normalize'])
         
         #objective number (used for validation)
         self.obj_idx = 0
@@ -100,11 +98,7 @@ class NgspiceEnv(gym.Env):
         else:
           self.cur_params =   np.array([random.randint(0, len(param_vec)-1) for param_vec in self.params])
         self.cur_specs = self.update(self.cur_params)
-
-        #applicable only when you have multiple goals, normalizes everything to some global_g
-        self.specs_ideal_norm = self.lookup(self.specs_ideal, self.global_g)
-        cur_spec_norm = self.lookup(self.cur_specs, self.global_g)
-        self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params])
+        self.ob = np.concatenate([self.cur_specs, self.specs_ideal, self.cur_params])
         #observation is a combination of current specs distance from ideal, ideal spec, and current param vals
         return self.ob
  
@@ -133,8 +127,7 @@ class NgspiceEnv(gym.Env):
             print('ideal specs:', self.specs_ideal)
             print('-'*10)
 
-        cur_spec_norm = self.lookup(self.cur_specs, self.global_g)
-        self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params])
+        self.ob = np.concatenate([self.cur_specs, self.specs_ideal, self.cur_params])
             
         return self.ob, reward, done, {}
 
