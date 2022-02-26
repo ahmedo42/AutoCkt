@@ -8,7 +8,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--num_workers",type=int,default=1)
 parser.add_argument("--experiment",type=str,default="train_45nm_ngspice")
-parser.add_argument("--horizon",type=int,default=100)
+parser.add_argument("--horizon",type=int,default=30)
 parser.add_argument("--batch_size",type=int,default=1200)
 parser.add_argument("--framework",type=str,default="torch")
 parser.add_argument("--algo",type=str,default="PPO")

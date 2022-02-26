@@ -18,7 +18,9 @@ def gen_data(CIR_YAML, env, num_specs, mode, sim_env):
   yaml_specs = yaml_data['target_specs']
   yaml_params= yaml_data['params']
   param_vals = list(yaml_params.values())
-  spec_ranges = list(yaml_specs.values())
+  sorted_specs = sorted(yaml_specs.items(),key=lambda k:k[0])
+  specs_ranges = [y for x,y in sorted_specs]
+
 
   params = []
   valid_specs = []
@@ -31,8 +33,12 @@ def gen_data(CIR_YAML, env, num_specs, mode, sim_env):
   while len(valid_specs) < num_specs:
     random_params = np.array([random.randint(0, len(param_vec)-1) for param_vec in params])
     specs = simulate(random_params,params,sim_env,params_id)
-    valid_specs.append(tuple(specs))
-  for idx,(key,value) in enumerate(sorted(yaml_specs.items(),key=lambda k:k[0])):
+
+    if is_spec_valid(specs,specs_ranges):
+      print(specs)
+      valid_specs.append(tuple(specs))
+
+  for idx,(key,value) in enumerate(sorted_specs):
       yaml_specs[key] = tuple([valid_specs[i][idx] for i in range(len(valid_specs))])
   with open("autockt/gen_specs/ngspice_specs_"+mode+'_'+env, 'wb') as f:
     pickle.dump(yaml_specs,f)
@@ -49,8 +55,8 @@ def simulate(params_idx,params,sim_env,params_id):
     return specs
 
 
-def is_spec_valid(spec,spec_ranges):
-  return all([spec[i] >= spec_ranges[i][0] and spec[i] <= spec_ranges[i][1] for i in range(len(spec_ranges))])
+def is_spec_valid(specs,specs_ranges):
+    return (specs[0] >= 100 and specs[1] >= 0.0001 and specs[2] >= 45 and specs[3] >= 1e6)
 
 def main():
   parser = argparse.ArgumentParser()
@@ -59,7 +65,11 @@ def main():
   parser.add_argument("--mode", type=str, default="train")
   args = parser.parse_args()
   CIR_YAML = "autockt/eval_engines/ngspice/ngspice_inputs/yaml_files/" + args.env + ".yaml"
-  sim_env = TwoStageClass(yaml_path=CIR_YAML, num_process=1, path=os.getcwd()) 
+  if args.env == "two_stage_opamp":
+    sim_env = TwoStageClass(yaml_path=CIR_YAML, num_process=1, path=os.getcwd()) 
+  else:
+    sim_env = CsAmpClass(yaml_path=CIR_YAML, num_process=1, path=os.getcwd()) 
+
   gen_data(CIR_YAML, args.env, args.num_specs, args.mode, sim_env)
 
 if __name__=="__main__":

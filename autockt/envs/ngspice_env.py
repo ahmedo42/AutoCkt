@@ -49,7 +49,7 @@ class NgspiceEnv(gym.Env):
             self.params.append(param_vec)
         
         #This should be overloaded in each env
-        self.action_meaning = [-1,0,1] 
+        self.action_meaning = [-1,0,2] 
         self.action_space = spaces.Tuple([spaces.Discrete(len(self.action_meaning))]*len(self.params_id))
         low_bound = np.array([-np.inf]*2*len(self.specs_id)+[-np.inf]*len(self.params_id))
         high_bound = np.array([np.inf]*2*len(self.specs_id)+[np.inf]*len(self.params_id))
@@ -96,7 +96,7 @@ class NgspiceEnv(gym.Env):
         if self.mid_range_init:
             self.cur_params = np.array([len(param_vec)//2 for param_vec in self.params])
         else:
-          self.cur_params =   np.array([random.randint(0, len(param_vec)-1) for param_vec in self.params])
+          self.cur_params =   np.array([33, 33, 33, 33, 33, 14, 20])
         self.cur_specs = self.update(self.cur_params)
         self.ob = np.concatenate([self.cur_specs, self.specs_ideal, self.cur_params])
         #observation is a combination of current specs distance from ideal, ideal spec, and current param vals
