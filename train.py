@@ -18,8 +18,8 @@ parser.add_argument("--log_frequency",type=int,default=30) # number of seconds b
 parser.add_argument("--env",type=str,default="two_stage_opamp")
 parser.add_argument("--seed",type=int,default=17)
 parser.add_argument("--lr",type=float,default=5e-5)
-parser.add_argument("--neurons",type=int,default=50)
-parser.add_argument("--n_layers",type=int,default=3)
+parser.add_argument("--neurons",type=int,default=64)
+parser.add_argument("--n_layers",type=int,default=2)
 parser.add_argument("--mid_range_init",action="store_true")
 args = parser.parse_args()
 ray.init()
@@ -57,7 +57,7 @@ env = env_mapping[args.env]
 trials = tune.run_experiments({
     args.experiment: {
     "run": args.algo,
-    "checkpoint_freq":5,
+    "checkpoint_freq":1,
     "keep_checkpoints_num":1,
     "local_dir":args.output_path,
     "env": env,
