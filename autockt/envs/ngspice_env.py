@@ -21,7 +21,7 @@ class NgspiceEnv(gym.Env):
         num_valid = env_config.get("num_valid",50)
         self.valid = env_config.get("run_valid", False)
         mode = "valid" if self.valid else "train"
-        self.specs_path = os.getcwd()+"/autockt/gen_specs/ngspice_specs_"+mode+'_'+env_config.get("env",None)
+        self.specs_path = os.getcwd()+"/autockt/gen_specs/specs_"+mode+'_'+env_config.get("env",None)
 
         with open(self.CIR_YAML, 'r') as f:
             yaml_data = yaml.load(f, OrderedDictYAMLLoader)

@@ -3,6 +3,7 @@ import ray.tune as tune
 from ray.tune import CLIReporter
 from autockt.envs.ngspice_vanilla_opamp import TwoStageAmp
 from autockt.envs.ngspice_csamp import CsAmp
+from autockt.envs.folded_cascode import FoldedCascode
 
 import argparse
 parser = argparse.ArgumentParser()
@@ -30,6 +31,7 @@ ray.init()
 env_mapping = {
     "two_stage_opamp" : TwoStageAmp,
     "cs_amp": CsAmp,
+    "folded_cascode":FoldedCascode,
 }
 
 model_structure = [args.neurons] * args.n_layers

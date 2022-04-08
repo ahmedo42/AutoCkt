@@ -6,3 +6,4 @@ ray[tune]
 gym
 lz4
 hiredis
+scipy

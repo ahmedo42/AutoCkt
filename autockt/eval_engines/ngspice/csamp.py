@@ -23,7 +23,7 @@ class CsAmpClass(NgSpiceWrapper):
         spec = dict(
             bw=bw,
             gain=gain,
-            Ibias=Ibias
+            ibias=Ibias
         )
 
         return spec

@@ -11,6 +11,7 @@ from ray.tune.registry import register_env
 
 from autockt.envs.ngspice_vanilla_opamp import TwoStageAmp
 from autockt.envs.ngspice_csamp import CsAmp
+from autockt.envs.folded_cascode import FoldedCascode
 
 EXAMPLE_USAGE = """
 Example Usage via RLlib CLI:
@@ -106,6 +107,10 @@ def rollout(agent, env_name):
     elif env_name == "csamp-v0":
         env_config["env"] = "cs_amp"
         env = CsAmp(env_config=env_config)
+    
+    elif env_name == "foldedcascode-v0":
+        env_config["env"] = "folded_cascode"
+        env = FoldedCascode(env_config=env_config)
 
     #get unnormlaized specs
     norm_spec_ref = env.global_g
