@@ -26,6 +26,7 @@ Example Usage via executable:
 ## register_env("pa_cartpole", lambda _: ParametricActionCartpole(10))
 register_env("opamp-v0", lambda config:TwoStageAmp(config))
 register_env("csamp-v0", lambda config:CsAmp(config))
+register_env("foldedcascode-v0", lambda config:FoldedCascode(config))
 
 def create_parser(parser_creator=None):
     parser_creator = parser_creator or argparse.ArgumentParser
@@ -99,7 +100,11 @@ def unlookup(norm_spec, goal_spec):
     return spec
 
 def rollout(agent, env_name):
-    env_config = {"generalize":True,"num_valid":args.num_val_specs, "run_valid":True}
+    if env_name == "foldedcascode-v0":
+        MID_RANGE = True
+    else:
+        MID_RANGE = False
+    env_config = {"generalize":True,"num_valid":args.num_val_specs, "run_valid":True,"mid_range_init":MID_RANGE}
     if env_name == "opamp-v0":
         env_config["env"] = "two_stage_opamp"
         env = TwoStageAmp(env_config=env_config)

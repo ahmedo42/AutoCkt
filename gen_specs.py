@@ -26,11 +26,14 @@ def gen_data(CIR_YAML, env, num_specs, mode, sim_env):
   valid_specs = []
 
   if isinstance(sim_env, pd.DataFrame):
+    spec_names = [x for x,y in sorted_specs]
     df = sim_env.sample(n=num_specs)
-    df = df[list(sorted_specs.keys())]
+    print(spec_names)
+    df = df[spec_names]
     df = df.reindex(sorted(df.columns), axis=1)
     specs = df.values
     for spec in specs:
+      print(spec)
       valid_specs.append(tuple(spec))
 
   else:

@@ -5,10 +5,10 @@ from collections import OrderedDict
 
 import gym
 import numpy as np
-import yaml
-import yaml.constructor
+import pandas as pd
 from autockt.eval_engines.ngspice.csamp import *
 from autockt.utils import OrderedDictYAMLLoader
+from autockt.envs.ngspice_env import  NgspiceEnv
 from gym import spaces
 from scipy import spatial 
 
