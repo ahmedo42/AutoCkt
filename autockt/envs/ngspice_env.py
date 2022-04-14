@@ -42,14 +42,14 @@ class NgspiceEnv(gym.Env):
         
         params = yaml_data['params']
         self.params = []
-        self.params_id = list(params.keys())
+        self.params_id = sorted(list(params.keys()))
 
         for value in params.values():
             param_vec = np.arange(value[0], value[1], value[2])
             self.params.append(param_vec)
         
         #This should be overloaded in each env
-        self.action_meaning = [-1,0,2] 
+        self.action_meaning = [-1,0,1] 
         self.action_space = spaces.Tuple([spaces.Discrete(len(self.action_meaning))]*len(self.params_id))
         low_bound = np.array([-np.inf]*2*len(self.specs_id)+[-np.inf]*len(self.params_id))
         high_bound = np.array([np.inf]*2*len(self.specs_id)+[np.inf]*len(self.params_id))
@@ -94,7 +94,7 @@ class NgspiceEnv(gym.Env):
 
         #initialize current parameters to
         if self.mid_range_init:
-            self.cur_params = np.array([len(param_vec)//2 for param_vec in self.params])
+            self.cur_params = np.array([len(param_vec) // 2 for param_vec in self.params])
         else:
           self.cur_params =   np.array([33, 33, 33, 33, 33, 14, 20])
         self.cur_specs = self.update(self.cur_params)
@@ -143,7 +143,7 @@ class NgspiceEnv(gym.Env):
         rel_specs = self.lookup(spec, goal_spec)
         reward = 0.0
         for i,rel_spec in enumerate(rel_specs):
-            if(self.specs_id[i] == 'ibias_max'):
+            if(self.specs_id[i] == 'ibias_max' or self.specs_id[i] == "IB"):
                 rel_spec = rel_spec*-1.0
             if rel_spec < 0:
                 reward += rel_spec

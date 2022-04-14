@@ -10,44 +10,35 @@ import pandas as pd
 from autockt.utils import OrderedDictYAMLLoader
 from autockt.eval_engines.ngspice.TwoStageClass import *
 from autockt.eval_engines.ngspice.csamp import *
-
+from autockt.eval_engines.ddb.folded_cascode import *
 #Generate the design specifications and then save to a pickle file
 def gen_data(CIR_YAML, env, num_specs, mode, sim_env):
-
   with open(CIR_YAML, 'r') as f:
     yaml_data = yaml.load(f, OrderedDictYAMLLoader)
-
   yaml_specs = yaml_data['target_specs']
   yaml_params= yaml_data['params']
   param_vals = list(yaml_params.values())
   sorted_specs = sorted(yaml_specs.items(),key=lambda k:k[0])
   specs_ranges = [y for x,y in sorted_specs]
-
+  params = []
+  params_id = list(yaml_params.keys())
+  for value in yaml_params.values():
+      param_vec = np.arange(value[0], value[1], value[2])
+      params.append(param_vec)
   valid_specs = []
 
-  if isinstance(sim_env, pd.DataFrame):
+  if hasattr(sim_env, "df"):
     spec_names = [x for x,y in sorted_specs]
-    df = sim_env.sample(n=num_specs)
-    print(spec_names)
-    df = df[spec_names]
-    df = df.reindex(sorted(df.columns), axis=1)
-    specs = df.values
-    for spec in specs:
-      print(spec)
-      valid_specs.append(tuple(spec))
-
+    while len(valid_specs) < num_specs:
+      random_params = np.array([random.randint(0, len(param_vec)-1) for param_vec in params])
+      spec = sim_env.update(random_params)
+      if is_spec_valid(spec,specs_ranges):
+        print(spec)
+        valid_specs.append(tuple(spec))
   else:
-    params = []
-    params_id = list(yaml_params.keys())
-
-    for value in yaml_params.values():
-        param_vec = np.arange(value[0], value[1], value[2])
-        params.append(param_vec)
-
     while len(valid_specs) < num_specs:
       random_params = np.array([random.randint(0, len(param_vec)-1) for param_vec in params])
       specs = simulate(random_params,params,sim_env,params_id)
-
       if is_spec_valid(specs,specs_ranges):
         print(specs)
         valid_specs.append(tuple(specs))
@@ -71,7 +62,7 @@ def simulate(params_idx,params,sim_env,params_id):
 
 def is_spec_valid(specs,specs_ranges):
     for spec,(lower_bound,upper_bound) in zip(specs,specs_ranges):
-      if spec < lower_bound:
+      if spec > upper_bound or spec < lower_bound :
         return False
     return True
 
@@ -88,7 +79,7 @@ def main():
   elif args.env == "cs_amp":
     sim_env = CsAmpClass(yaml_path=CIR_YAML, num_process=1, path=os.getcwd())
   elif args.env == "folded_cascode":
-    sim_env = pd.read_csv(DATAFRAME_PATH)
+    sim_env = FoldedCascode()
     CIR_YAML = "autockt/eval_engines/ddb/" + args.env + ".yaml"
 
   gen_data(CIR_YAML, args.env, args.num_specs, args.mode, sim_env)

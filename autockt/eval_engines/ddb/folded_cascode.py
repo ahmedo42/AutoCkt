@@ -11,11 +11,21 @@ from autockt.envs.ngspice_env import  NgspiceEnv
 from gym import spaces
 from scipy import spatial 
 
-class FoldedCascode(NgspiceEnv):
-    def __init__(self, env_config):
+class FoldedCascode:
+    def __init__(self):
+        with open(yaml_file, 'r') as f:
+            yaml_data = yaml.load(f, OrderedDictYAMLLoader)
         self.df = pd.read_csv("autockt/eval_engines/ddb/folded_cascode.csv")
         self.CIR_YAML = os.getcwd()+'/autockt/eval_engines/ddb/folded_cascode.yaml'
-        super().__init__(env_config)
+        self.specs_id = sorted(list(yaml_data['target_specs'].keys()))
+        self._init_params(yaml_data['params'])
+
+    def _init_params(self,params_dict):
+        self.params = []
+        self.params_id = list(params_dict.keys())
+        for value in params_dict.values():
+            param_vec = np.arange(value[0], value[1], value[2]).tolist()
+            self.params.append(param_vec)
 
     def _get_closest_spec(self,params):
         if not hasattr(self, "params_tree"):

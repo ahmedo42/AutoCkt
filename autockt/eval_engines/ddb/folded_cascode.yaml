@@ -1,10 +1,10 @@
 params:
-  M1(L):  !!python/tuple [!!float 0.18, !!float 2.0, !!float 0.01]
-  M2(L):  !!python/tuple [!!float 0.18, !!float 2.0, !!float 0.01]
-  M3(L):  !!python/tuple [!!float 0.18, !!float 2.0, !!float 0.01]
-  M4(L):  !!python/tuple [!!float 0.18, !!float 2.0, !!float 0.01]
-  M5(L):  !!python/tuple [!!float 0.18, !!float 2.0, !!float 0.01]
-  M6(L):  !!python/tuple [!!float 0.18, !!float 2.0, !!float 0.01]
+  M1(L):  !!python/tuple [!!float 0.18, !!float 2.0, !!float 0.02]
+  M2(L):  !!python/tuple [!!float 0.18, !!float 2.0, !!float 0.02]
+  M3(L):  !!python/tuple [!!float 0.18, !!float 2.0, !!float 0.02]
+  M4(L):  !!python/tuple [!!float 0.18, !!float 2.0, !!float 0.02]
+  M5(L):  !!python/tuple [!!float 0.18, !!float 2.0, !!float 0.02]
+  M6(L):  !!python/tuple [!!float 0.18, !!float 2.0, !!float 0.02]
   M1(GM/ID):   !!python/tuple [!!float 10.0, !!float 20.0, !!float 0.1]
   M2(GM/ID):   !!python/tuple [!!float 10.0, !!float 20.0, !!float 0.1]
   M3(GM/ID):   !!python/tuple [!!float 10.0, !!float 25.0, !!float 0.1]
@@ -17,7 +17,7 @@ params:
 
 #during training, at reset a specification will be chosen at random between [min,max,#]
 target_specs:
-  BW: !!python/tuple [NULL,NULL]
-  PM: !!python/tuple [NULL, NULL]
-  IB: !!python/tuple [NULL,NULL]
-  DC Gain: !!python/tuple [NULL, NULL]
+  BW: !!python/tuple [1000,20000]
+  PM: !!python/tuple [60, 100]
+  IB: !!python/tuple [10.0,100.0]
+  DC Gain: !!python/tuple [1000, 8000]
