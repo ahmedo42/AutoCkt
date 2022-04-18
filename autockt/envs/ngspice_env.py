@@ -144,7 +144,7 @@ class NgspiceEnv(gym.Env):
         reward = 0.0
         for i,rel_spec in enumerate(rel_specs):
             if(self.specs_id[i] == 'ibias_max' or self.specs_id[i] == "IB"):
-                rel_spec = rel_spec*-1.0
+                rel_spec *= -1.0
             if rel_spec < 0:
                 reward += rel_spec
 
@@ -165,3 +165,4 @@ class NgspiceEnv(gym.Env):
         cur_specs = np.array(list(cur_specs.values()))
 
         return cur_specs
+0

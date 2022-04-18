@@ -28,7 +28,6 @@ def gen_data(CIR_YAML, env, num_specs, mode, sim_env):
   valid_specs = []
 
   if hasattr(sim_env, "df"):
-    spec_names = [x for x,y in sorted_specs]
     while len(valid_specs) < num_specs:
       random_params = np.array([random.randint(0, len(param_vec)-1) for param_vec in params])
       spec = sim_env.update(random_params)
