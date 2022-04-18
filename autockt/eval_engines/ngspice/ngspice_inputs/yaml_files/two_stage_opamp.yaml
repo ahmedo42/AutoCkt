@@ -1,4 +1,4 @@
-dsn_netlist: "autockt/eval_engines/ngspice/ngspice_inputs/netlist/two_stage_opamp.cir"
+dsn_netlist: "CircuitGa/eval_engines/ngspice/ngspice_inputs/netlist/two_stage_opamp.cir"
 num_process: 1
 
 params:
@@ -12,9 +12,8 @@ params:
 
 
 
-#during training, at reset a specification will be chosen at random between [min,max,#]
 target_specs:
-  gain_min: !!python/tuple [100,400]
+  gain_min: !!python/tuple [200,400]
   ugbw_min: !!python/tuple [!!float 1.0e6, !!float 2.5e7]
   phm_min: !!python/tuple [45,75]
   ibias_max: !!python/tuple [0.0001, 0.01]

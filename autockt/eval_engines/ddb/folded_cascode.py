@@ -3,20 +3,18 @@ import pickle
 import random
 from collections import OrderedDict
 
-import gym
+import yaml
 import numpy as np
 import pandas as pd
 from autockt.utils import OrderedDictYAMLLoader
-from autockt.envs.ngspice_env import  NgspiceEnv
-from gym import spaces
 from scipy import spatial 
 
 class FoldedCascode:
     def __init__(self):
-        with open(yaml_file, 'r') as f:
-            yaml_data = yaml.load(f, OrderedDictYAMLLoader)
         self.df = pd.read_csv("autockt/eval_engines/ddb/folded_cascode.csv")
         self.CIR_YAML = os.getcwd()+'/autockt/eval_engines/ddb/folded_cascode.yaml'
+        with open(self.CIR_YAML, 'r') as f:
+            yaml_data = yaml.load(f, OrderedDictYAMLLoader)
         self.specs_id = sorted(list(yaml_data['target_specs'].keys()))
         self._init_params(yaml_data['params'])
 

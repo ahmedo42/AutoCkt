@@ -62,7 +62,7 @@ def create_parser(parser_creator=None):
     parser.add_argument(
         "--traj_len",
         type=int,
-        default=60,
+        default=30,
         help="Length of each trajectory")
     return parser
 
@@ -127,18 +127,18 @@ def rollout(agent, env_name):
     else:
         state_init = []
 
-    rollouts = []
     obs_reached = []
     obs_nreached = []
     action_array = []
     action_arr_comp = []
+    sim_steps = []
     rollout_steps = 0
     reached_spec = 0
     while rollout_steps < args.num_val_specs:
         state = env.reset()
         done = False
         reward_total = 0.0
-        steps=0
+        steps = 0
         while not done and steps < args.traj_len:
             action = agent.compute_action(state)
             action_array.append(action)
@@ -153,17 +153,19 @@ def rollout(agent, env_name):
             obs_reached.append(ideal_spec)
             action_arr_comp.append(action_array)
             action_array = []
+            sim_steps.append(steps)
             pickle.dump(action_arr_comp, open("action_arr_test", "wb"))
         else:
             obs_nreached.append(ideal_spec)
             action_array=[]
         print("Episode reward", reward_total)
-        rollout_steps+=1
+        rollout_steps += 1
         pickle.dump(obs_reached, open("{}_obs_reached_test".format(env_config["env"]),"wb"))
         pickle.dump(obs_nreached, open("{}_obs_nreached_test".format(env_config["env"]),"wb"))
         print("Specs reached: " + str(reached_spec) + "/" + str(len(obs_nreached))) 
 
     print("Num specs reached: " + str(reached_spec) + "/" + str(args.num_val_specs))
+    print("Average Simulation Steps: " + str(np.mean(sim_steps)))
 
 if __name__ == "__main__":
     parser = create_parser()
