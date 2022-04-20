@@ -42,7 +42,7 @@ class NgspiceEnv(gym.Env):
         
         params = yaml_data['params']
         self.params = []
-        self.params_id = sorted(list(params.keys()))
+        self.params_id = list(params.keys())
 
         for value in params.values():
             param_vec = np.arange(value[0], value[1], value[2])
@@ -64,7 +64,6 @@ class NgspiceEnv(gym.Env):
         for spec in list(self.specs.values()):
                 self.global_g.append(float(spec[self.fixed_goal_idx]))
         self.g_star = np.array(self.global_g)
-        
         #objective number (used for validation)
         self.obj_idx = 0
 
@@ -93,13 +92,14 @@ class NgspiceEnv(gym.Env):
                 self.specs_ideal = np.array(self.specs_ideal)
 
         #initialize current parameters to
-        if self.mid_range_init:
-            self.cur_params = np.array([len(param_vec) // 2 for param_vec in self.params])
+        if self.mid_range_init == True:
+            self.cur_params =   np.array([len(param_vec)//2 for param_vec in self.params])
         else:
-          self.cur_params =   np.array([33, 33, 33, 33, 33, 14, 20])
+            self.cur_params =  np.array([33, 33, 33, 33, 33, 14, 20])
         self.cur_specs = self.update(self.cur_params)
+
+
         self.ob = np.concatenate([self.cur_specs, self.specs_ideal, self.cur_params])
-        #observation is a combination of current specs distance from ideal, ideal spec, and current param vals
         return self.ob
  
     def step(self, action):
@@ -144,7 +144,7 @@ class NgspiceEnv(gym.Env):
         reward = 0.0
         for i,rel_spec in enumerate(rel_specs):
             if(self.specs_id[i] == 'ibias_max' or self.specs_id[i] == "IB"):
-                rel_spec *= -1.0
+                rel_spec = rel_spec*-1.0
             if rel_spec < 0:
                 reward += rel_spec
 
@@ -152,7 +152,6 @@ class NgspiceEnv(gym.Env):
 
     def update(self, params_idx):
         """
-
         :param action: an int between 0 ... n-1
         :return:
         """
@@ -165,4 +164,3 @@ class NgspiceEnv(gym.Env):
         cur_specs = np.array(list(cur_specs.values()))
 
         return cur_specs
-0

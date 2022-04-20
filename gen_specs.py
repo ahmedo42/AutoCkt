@@ -11,7 +11,7 @@ from autockt.utils import OrderedDictYAMLLoader
 from autockt.eval_engines.ngspice.TwoStageClass import *
 from autockt.eval_engines.ngspice.csamp import *
 from autockt.eval_engines.ddb.folded_cascode import *
-#Generate the design specifications and then save to a pickle file
+
 def gen_data(CIR_YAML, env, num_specs, mode, sim_env):
   with open(CIR_YAML, 'r') as f:
     yaml_data = yaml.load(f, OrderedDictYAMLLoader)
