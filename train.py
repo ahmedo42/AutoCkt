@@ -19,7 +19,7 @@ parser.add_argument("--seed",type=int,default=17)
 parser.add_argument("--lr",type=float,default=5e-5)
 parser.add_argument("--neurons",type=int,default=50)
 parser.add_argument("--n_layers",type=int,default=3)
-parser.add_argument("--episodes_total",type=int,default=35000)
+parser.add_argument("--episodes_total",type=int,default=10000)
 args = parser.parse_args()
 ray.init()
 

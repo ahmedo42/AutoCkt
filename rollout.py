@@ -11,7 +11,6 @@ from ray.tune.registry import register_env
 
 from autockt.envs.ngspice_vanilla_opamp import TwoStageAmp
 from autockt.envs.ngspice_csamp import CsAmp
-from autockt.envs.folded_cascode import FoldedCascode
 
 EXAMPLE_USAGE = """
 Example Usage via RLlib CLI:
