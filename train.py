@@ -8,11 +8,10 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--num_workers",type=int,default=1)
 parser.add_argument("--experiment",type=str,default="train_45nm_ngspice")
-parser.add_argument("--horizon",type=int,default=30)
+parser.add_argument("--horizon",type=int,default=50)
 parser.add_argument("--batch_size",type=int,default=1200)
 parser.add_argument("--framework",type=str,default="torch")
 parser.add_argument("--algo",type=str,default="PPO")
-parser.add_argument("--episodes_per_batch",type=int,default=100) # valid only when training with ES
 parser.add_argument("--output_path",type=str,default="./results")
 parser.add_argument("--log_frequency",type=int,default=30) # number of seconds between each log
 parser.add_argument("--env",type=str,default="two_stage_opamp")
@@ -20,7 +19,7 @@ parser.add_argument("--seed",type=int,default=17)
 parser.add_argument("--lr",type=float,default=5e-5)
 parser.add_argument("--neurons",type=int,default=50)
 parser.add_argument("--n_layers",type=int,default=3)
-parser.add_argument("--mid_range_init",action="store_true")
+parser.add_argument("--episodes_total",type=int,default=35000)
 args = parser.parse_args()
 ray.init()
 
@@ -38,7 +37,7 @@ config_train = {
             "horizon":  args.horizon,
             "model":{"fcnet_hiddens": model_structure},
             "num_workers": args.num_workers,
-            "env_config":{"generalize":True, "run_valid":False,"env":args.env,"mid_range_init":args.mid_range_init},
+            "env_config":{"run_valid":False,"env":args.env},
             "framework":args.framework,
             "episodes_per_batch":args.episodes_per_batch,
             "seed" : args.seed,
@@ -46,8 +45,6 @@ config_train = {
 
             }
 
-if args.algo != "ES":
-    del config_train["episodes_per_batch"]
 
 reporter = CLIReporter(max_report_frequency=args.log_frequency)
 env = env_mapping[args.env]
@@ -61,7 +58,7 @@ trials = tune.run_experiments({
     "keep_checkpoints_num":1,
     "local_dir":args.output_path,
     "env": env,
-    "stop": {"episode_reward_mean": -0.02},
+    "stop": {"episodes_total": args.episodes_total},
     "checkpoint_at_end":True,
     "config": config_train}},
     progress_reporter=reporter
