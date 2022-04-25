@@ -39,7 +39,6 @@ config_train = {
             "num_workers": args.num_workers,
             "env_config":{"run_valid":False,"env":args.env},
             "framework":args.framework,
-            "episodes_per_batch":args.episodes_per_batch,
             "seed" : args.seed,
             "lr" : args.lr,
 

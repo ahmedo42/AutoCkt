@@ -95,7 +95,7 @@ class NgspiceEnv(gym.Env):
         self.cur_params =  np.array([len(param_vec)//2 for param_vec in self.params])
         self.cur_specs = self.update(self.cur_params)
 
-        self.ob = np.concatenate([self.cur_spec, self.specs_ideal, self.cur_params])
+        self.ob = np.concatenate([self.cur_specs, self.specs_ideal, self.cur_params])
         return self.ob
  
     def step(self, action):
