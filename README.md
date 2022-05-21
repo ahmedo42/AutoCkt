@@ -1,6 +1,14 @@
 # AutoCkt: Deep Reinforcement Learning of Analog Circuit Designs
 Code for [Deep Reinforcement Learning of Analog Circuit Designs](https://arxiv.org/abs/2001.01808).
 
+## Note
+
+- There are two branches, `master` and `valid-specs`, the primary difference is in the data generation script but both produce
+    roughly the same generalization accuracy
+
+- The `valid-specs` branch contain an almost-working implementation of the folded cascode circuit 
+
+- This repo doesn't consistently produce the paper's results but can be a good starting point for analog design with RL
 
 ## Setup
 Install Dependencies
